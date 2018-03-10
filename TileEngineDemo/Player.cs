@@ -9,10 +9,10 @@ namespace TileEngineDemo
     {
         public float Speed;
 
-        public Player(string textureName, Vector2 position, int spriteWidth, int spriteHeight, int mapWidth, int mapHeight, float scale = 1.0f, float rotation = 0.0f) 
-            : base(textureName, position, spriteWidth, spriteHeight, mapWidth, mapHeight)
+        public Player(string textureName, Vector2 position, int spriteWidth, int spriteHeight) 
+            : base(textureName, position, spriteWidth, spriteHeight)
         {
-           Speed = 2.0f;
+           Speed = 0.3f;
         }
 
         public override void LoadContent(ContentManager content)
@@ -20,7 +20,7 @@ namespace TileEngineDemo
             base.LoadContent(content);
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
             KeyboardState kState = Keyboard.GetState();
             Vector2 motion = new Vector2();
@@ -35,6 +35,7 @@ namespace TileEngineDemo
                 motion.X++;
             if (motion != Vector2.Zero)
                 motion.Normalize();
+            
 
             if (motion != Vector2.Zero)
             {
@@ -46,19 +47,18 @@ namespace TileEngineDemo
                 {
                     SourceRectangle = new Rectangle(0, 0, 32, 32);
                 }
-                else if (motion.X == -1)
+                else if (motion.X >= -1 && motion.X < 0)
                 {
                     SourceRectangle = new Rectangle(64, 0, 32, 32);
                 }
-                else if (motion.X == 1)
+                else if (motion.X <= 1 && motion.X > 0)
                 {
                     SourceRectangle = new Rectangle(96, 0, 32, 32);
                 }
             }
             
-
-            Position += motion * Speed;
-            base.Update();
+            Position += motion * (Speed * (float)gameTime.ElapsedGameTime.Milliseconds);
+            base.Update(gameTime);
         }
     }
 }

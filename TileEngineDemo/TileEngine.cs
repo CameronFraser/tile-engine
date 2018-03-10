@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System.Collections.ObjectModel;
-using System;
 using TiledSharp;
 
 namespace TileEngineDemo

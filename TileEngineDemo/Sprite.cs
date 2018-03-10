@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using System;
 
 namespace TileEngineDemo
 {
@@ -15,36 +14,33 @@ namespace TileEngineDemo
         public int SheetHeight;
         public Vector2 Position;
         public Rectangle SourceRectangle;
-        int MapWidth;
-        int MapHeight;
         int RightBoundary;
         int BottomBoundary;
 
-
-        public Sprite(string textureName, Vector2 position, int spriteWidth, int spriteHeight, int mapWidth, int mapHeight)
+        public Sprite(string textureName, Vector2 position, int spriteWidth, int spriteHeight)
         {
             TextureName = textureName;
             Position = position;
-            MapWidth = mapWidth;
-            MapHeight = mapHeight;
             Width = spriteWidth;
             Height = spriteHeight;
         }
 
         public virtual void LoadContent(ContentManager content)
         {
+            TileEngine tileEngine = GameServices.GetService<TileEngine>();
             SpriteSheet = content.Load<Texture2D>(TextureName);
+            
 
             SheetWidth = SpriteSheet.Width;
             SheetHeight = SpriteSheet.Height;
 
             SourceRectangle = new Rectangle(0, 0, Width, Height);
 
-            RightBoundary = MapWidth * 32 - Width;
-            BottomBoundary = MapHeight * 32 - Height;
+            RightBoundary = tileEngine.TileMapTilesWide * tileEngine.TileWidth - Width;
+            BottomBoundary = tileEngine.TileMapTilesHigh * tileEngine.TileHeight - Height;
         }
 
-        public virtual void Update()
+        public virtual void Update(GameTime gameTime)
         {
             LockSprite();
         }

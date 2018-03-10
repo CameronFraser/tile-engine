@@ -29,6 +29,8 @@ namespace TileEngineDemo
             {
                 Position = new Vector2(0, 0)
             };
+
+            GameServices.AddService(Camera);
         }
         
         protected override void Initialize()
@@ -44,21 +46,15 @@ namespace TileEngineDemo
 
             TileEngine = new TileEngine(map.Width, map.Height, map.Layers[0].Tiles, map.Tilesets[0]);
 
-            int rightCameraBoundary = TileEngine.TileMapTilesWide * TileEngine.TileWidth - graphics.PreferredBackBufferWidth;
-            int bottomCameraBoundary = TileEngine.TileMapTilesHigh * TileEngine.TileHeight - graphics.PreferredBackBufferHeight;
+            GameServices.AddService(TileEngine);
 
-            Camera.RightBoundary = rightCameraBoundary;
-            Camera.BottomBoundary = bottomCameraBoundary;
+            Camera.Initialize(graphics);
 
-            Player = new Player("porky", new Vector2(1500, 1500), 32, 32, TileEngine.TileMapTilesWide, TileEngine.TileMapTilesHigh);
-
-            TileEngine.Initialize();
             TileEngine.LoadContent(spriteBatch, Content);
+
+            Player = new Player("porky", new Vector2(1500, 1500), 32, 32);
+
             Player.LoadContent(Content);
-        }
-        
-        protected override void UnloadContent()
-        {
         }
 
         protected override void Update(GameTime gameTime)
@@ -66,7 +62,7 @@ namespace TileEngineDemo
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
            
-            Player.Update();
+            Player.Update(gameTime);
             
             Camera.Position = Player.Position;
             Camera.LockCamera();

@@ -10,8 +10,8 @@ namespace TileEngineDemo
         public float Rotation;
         public Matrix Transform;
         public Vector2 Position;
-        public int BottomBoundary;
-        public int RightBoundary;
+        private int BottomBoundary;
+        private int RightBoundary;
         Viewport Viewport;
 
         public Camera2D()
@@ -19,6 +19,13 @@ namespace TileEngineDemo
             zoom = 1.0f;
             Rotation = 0.0f;
             Position = Vector2.Zero;
+        }
+
+        public void Initialize(GraphicsDeviceManager graphics)
+        {
+            TileEngine tileEngine = GameServices.GetService<TileEngine>();
+            RightBoundary = tileEngine.TileMapTilesWide * tileEngine.TileWidth - graphics.PreferredBackBufferWidth;
+            BottomBoundary = tileEngine.TileMapTilesHigh * tileEngine.TileHeight - graphics.PreferredBackBufferHeight;
         }
 
         public float Zoom
