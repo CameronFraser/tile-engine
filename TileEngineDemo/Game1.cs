@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TiledSharp;
+using System;
 
 namespace TileEngineDemo
 {
@@ -11,6 +12,10 @@ namespace TileEngineDemo
         SpriteBatch spriteBatch;
 
         TileEngine TileEngine;
+
+        Camera2D Camera;
+
+        Sprite Player;
         
         public Game1()
         {
@@ -19,6 +24,9 @@ namespace TileEngineDemo
             graphics.PreferredBackBufferWidth = 1024;
             graphics.PreferredBackBufferHeight = 768;
             graphics.ApplyChanges();
+
+            Camera = new Camera2D();
+            Camera.Position = new Vector2(0, 0);
         }
         
         protected override void Initialize()
@@ -28,13 +36,23 @@ namespace TileEngineDemo
         
         protected override void LoadContent()
         {
-
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
             TmxMap map = new TmxMap("../../../../Maps/test.tmx");
+
             TileEngine = new TileEngine(map.Width, map.Height, map.Layers[0].Tiles, map.Tilesets[0]);
 
-            TileEngine.Initialize(graphics);
+            int rightCameraBoundary = TileEngine.TileMapTilesWide * TileEngine.TileWidth - graphics.PreferredBackBufferWidth;
+            int bottomCameraBoundary = TileEngine.TileMapTilesHigh * TileEngine.TileHeight - graphics.PreferredBackBufferHeight;
+
+            Camera.RightBoundary = rightCameraBoundary;
+            Camera.BottomBoundary = bottomCameraBoundary;
+
+            Player = new Player("porky", new Vector2(1500, 1500), TileEngine.TileMapTilesWide, TileEngine.TileMapTilesHigh);
+
+            TileEngine.Initialize();
             TileEngine.LoadContent(spriteBatch, Content);
+            Player.LoadContent(Content);
         }
         
         protected override void UnloadContent()
@@ -47,6 +65,10 @@ namespace TileEngineDemo
                 Exit();
 
             TileEngine.Update(gameTime);
+            Player.Update();
+            
+            Camera.Position = Player.Position;
+            Camera.LockCamera();
 
             base.Update(gameTime);
         }
@@ -55,8 +77,9 @@ namespace TileEngineDemo
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, Camera.GetTransformation(GraphicsDevice));
             TileEngine.Draw(gameTime, spriteBatch);
+            Player.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

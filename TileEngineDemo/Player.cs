@@ -1,25 +1,26 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
 using System;
 
 namespace TileEngineDemo
 {
-    class Camera
+    class Player : Sprite
     {
-        public Vector2 Position;
         public float Speed;
-        public int RightBoundary;
-        public int BottomBoundary;
 
-        public Camera(Vector2 position, float speed, int rightBoundary, int bottomBoundary)
+        public Player(string textureName, Vector2 center, int mapWidth, int mapHeight, float scale = 1.0f, float rotation = 0.0f) : base(textureName, center, mapWidth, mapHeight)
         {
-            this.Position = position;
-            this.Speed = speed;
-            this.RightBoundary = rightBoundary;
-            this.BottomBoundary = bottomBoundary;
+           Speed = 2.0f;
+           Position = center;
         }
 
-        public void Update()
+        public override void LoadContent(ContentManager content)
+        {
+            base.LoadContent(content);
+        }
+
+        public override void Update()
         {
             KeyboardState kState = Keyboard.GetState();
             Vector2 motion = new Vector2();
@@ -36,15 +37,7 @@ namespace TileEngineDemo
                 motion.Normalize();
 
             Position += motion * Speed;
-
-            LockCamera();
+            base.Update();
         }
-
-        public void LockCamera()
-        {
-            Position.X = MathHelper.Clamp(Position.X, 0, RightBoundary);
-            Position.Y = MathHelper.Clamp(Position.Y, 0, BottomBoundary);
-        }
-
     }
 }
