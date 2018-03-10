@@ -12,6 +12,7 @@ namespace TileEngineDemo
         public Vector2 Position;
         public int BottomBoundary;
         public int RightBoundary;
+        Viewport Viewport;
 
         public Camera2D()
         {
@@ -23,31 +24,25 @@ namespace TileEngineDemo
         public float Zoom
         {
             get { return zoom; }
-            set { zoom = MathHelper.Clamp(value, 0.1f, 10f); }
-        }
-
-        public void Move(Vector2 distance)
-        {
-            Position += distance;
+            set { zoom = MathHelper.Clamp(value, 0.1f, 3f); }
         }
 
         public Matrix GetTransformation(GraphicsDevice graphicsDevice)
         {
-            Viewport viewport = graphicsDevice.Viewport;
+            Viewport = graphicsDevice.Viewport;
 
             Transform = Matrix.CreateTranslation(new Vector3(-Position.X, -Position.Y, 0)) *
                         Matrix.CreateRotationX(Rotation) *
                         Matrix.CreateScale(new Vector3(zoom, zoom, 1)) *
-                        Matrix.CreateTranslation(new Vector3(viewport.Width * 0.5f, viewport.Height * 0.5f, 0));
+                        Matrix.CreateTranslation(new Vector3(Viewport.Width * 0.5f, Viewport.Height * 0.5f, 0));
+
             return Transform;
         }
 
        public void LockCamera()
         {
-            Console.WriteLine(Position);
-
-            Position.X = MathHelper.Clamp(Position.X, 512, RightBoundary + 512);
-            Position.Y = MathHelper.Clamp(Position.Y, 384, BottomBoundary + 384);
+            Position.X = (int)MathHelper.Clamp(Position.X, Viewport.Width / 2, RightBoundary + Viewport.Width / 2);
+            Position.Y = (int)MathHelper.Clamp(Position.Y, Viewport.Height / 2, BottomBoundary + Viewport.Height / 2);
         }
     }
 }

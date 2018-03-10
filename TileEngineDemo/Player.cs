@@ -9,10 +9,10 @@ namespace TileEngineDemo
     {
         public float Speed;
 
-        public Player(string textureName, Vector2 center, int mapWidth, int mapHeight, float scale = 1.0f, float rotation = 0.0f) : base(textureName, center, mapWidth, mapHeight)
+        public Player(string textureName, Vector2 position, int spriteWidth, int spriteHeight, int mapWidth, int mapHeight, float scale = 1.0f, float rotation = 0.0f) 
+            : base(textureName, position, spriteWidth, spriteHeight, mapWidth, mapHeight)
         {
            Speed = 2.0f;
-           Position = center;
         }
 
         public override void LoadContent(ContentManager content)
@@ -35,6 +35,27 @@ namespace TileEngineDemo
                 motion.X++;
             if (motion != Vector2.Zero)
                 motion.Normalize();
+
+            if (motion != Vector2.Zero)
+            {
+                if (motion == new Vector2(0, -1))
+                {
+                    SourceRectangle = new Rectangle(32, 0, 32, 32);
+                }
+                else if (motion == new Vector2(0, 1))
+                {
+                    SourceRectangle = new Rectangle(0, 0, 32, 32);
+                }
+                else if (motion.X == -1)
+                {
+                    SourceRectangle = new Rectangle(64, 0, 32, 32);
+                }
+                else if (motion.X == 1)
+                {
+                    SourceRectangle = new Rectangle(96, 0, 32, 32);
+                }
+            }
+            
 
             Position += motion * Speed;
             base.Update();

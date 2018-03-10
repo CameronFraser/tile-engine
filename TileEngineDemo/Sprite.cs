@@ -11,34 +11,36 @@ namespace TileEngineDemo
         public string TextureName;
         public int Width;
         public int Height;
+        public int SheetWidth;
+        public int SheetHeight;
         public Vector2 Position;
-        public Vector2 ScreenPosition;
-        public float Scale;
-        public float Rotation;
-        Rectangle SourceRectangle;
+        public Rectangle SourceRectangle;
         int MapWidth;
         int MapHeight;
         int RightBoundary;
         int BottomBoundary;
 
 
-        public Sprite(string textureName, Vector2 position, int mapWidth, int mapHeight, float scale = 1.0f, float rotation = 0.0f)
+        public Sprite(string textureName, Vector2 position, int spriteWidth, int spriteHeight, int mapWidth, int mapHeight)
         {
             TextureName = textureName;
             Position = position;
-            Scale = scale;
-            Rotation = rotation;
             MapWidth = mapWidth;
             MapHeight = mapHeight;
+            Width = spriteWidth;
+            Height = spriteHeight;
         }
 
         public virtual void LoadContent(ContentManager content)
         {
             SpriteSheet = content.Load<Texture2D>(TextureName);
-            Width = SpriteSheet.Width;
-            Height = SpriteSheet.Height;
+
+            SheetWidth = SpriteSheet.Width;
+            SheetHeight = SpriteSheet.Height;
+
             SourceRectangle = new Rectangle(0, 0, Width, Height);
-            RightBoundary = MapWidth * 32 - Width / 4;
+
+            RightBoundary = MapWidth * 32 - Width;
             BottomBoundary = MapHeight * 32 - Height;
         }
 
@@ -49,13 +51,13 @@ namespace TileEngineDemo
 
         private void LockSprite()
         {
-            Position.X = MathHelper.Clamp(Position.X, 0, RightBoundary);
-            Position.Y = MathHelper.Clamp(Position.Y, 0, BottomBoundary);
+            Position.X = (int)MathHelper.Clamp(Position.X, 0, RightBoundary);
+            Position.Y = (int)MathHelper.Clamp(Position.Y, 0, BottomBoundary);
         }
         
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(SpriteSheet, Position, new Rectangle(0, 0, 32, 32), Color.White);
+            spriteBatch.Draw(SpriteSheet, Position, SourceRectangle, Color.White);
         }
     }
 }

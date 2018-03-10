@@ -61,12 +61,6 @@ namespace TileEngineDemo
             }
         }
 
-        public void Update(GameTime gameTIme)
-        {
-            
-        }
-
-
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             for (var x = 0; x < TileMapTilesWide; x++)
