@@ -8,6 +8,7 @@ namespace TileEngineDemo
     class Player : Sprite
     {
         public float Speed;
+        public Vector2 OldPosition;
 
         public Player(string textureName, Vector2 position, int spriteWidth, int spriteHeight) 
             : base(textureName, position, spriteWidth, spriteHeight)
@@ -22,6 +23,7 @@ namespace TileEngineDemo
 
         public override void Update(GameTime gameTime)
         {
+            OldPosition = Position;
             KeyboardState kState = Keyboard.GetState();
             Vector2 motion = new Vector2();
 
@@ -58,7 +60,14 @@ namespace TileEngineDemo
             }
             
             Position += motion * (Speed * (float)gameTime.ElapsedGameTime.Milliseconds);
+
             base.Update(gameTime);
+
+            Rectangle playerRect = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+            if (TileEngine.CheckIfColliding(playerRect))
+            {
+                Position = OldPosition;
+            }
         }
     }
 }

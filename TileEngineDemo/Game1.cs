@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using TiledSharp;
-using System;
 
 namespace TileEngineDemo
 {
@@ -44,7 +43,7 @@ namespace TileEngineDemo
 
             TmxMap map = new TmxMap("../../../../Maps/test.tmx");
 
-            TileEngine = new TileEngine(map.Width, map.Height, map.Layers[0].Tiles, map.Tilesets[0]);
+            TileEngine = new TileEngine(map.Width, map.Height, map.Layers[0].Tiles, map.Tilesets[0], map.ObjectGroups);
 
             GameServices.AddService(TileEngine);
 

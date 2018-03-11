@@ -16,6 +16,7 @@ namespace TileEngineDemo
         public Rectangle SourceRectangle;
         int RightBoundary;
         int BottomBoundary;
+        public TileEngine TileEngine;
 
         public Sprite(string textureName, Vector2 position, int spriteWidth, int spriteHeight)
         {
@@ -27,7 +28,7 @@ namespace TileEngineDemo
 
         public virtual void LoadContent(ContentManager content)
         {
-            TileEngine tileEngine = GameServices.GetService<TileEngine>();
+            TileEngine = GameServices.GetService<TileEngine>();
             SpriteSheet = content.Load<Texture2D>(TextureName);
             
 
@@ -36,8 +37,8 @@ namespace TileEngineDemo
 
             SourceRectangle = new Rectangle(0, 0, Width, Height);
 
-            RightBoundary = tileEngine.TileMapTilesWide * tileEngine.TileWidth - Width;
-            BottomBoundary = tileEngine.TileMapTilesHigh * tileEngine.TileHeight - Height;
+            RightBoundary = TileEngine.TileMapTilesWide * TileEngine.TileWidth - Width;
+            BottomBoundary = TileEngine.TileMapTilesHigh * TileEngine.TileHeight - Height;
         }
 
         public virtual void Update(GameTime gameTime)

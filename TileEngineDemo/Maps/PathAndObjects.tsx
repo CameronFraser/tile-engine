@@ -3,7 +3,7 @@
  <image source="../Downloads/PathAndObjects.png" width="512" height="512"/>
  <tile id="160">
   <objectgroup draworder="index">
-   <object id="3" x="0" y="0" width="32" height="32"/>
+   <object id="1" x="0" y="0" width="32" height="32"/>
   </objectgroup>
  </tile>
  <tile id="161">

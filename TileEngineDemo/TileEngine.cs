@@ -2,7 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using TiledSharp;
+using System;
 
 namespace TileEngineDemo
 {
@@ -18,8 +20,9 @@ namespace TileEngineDemo
         public int TileMapTilesWide;
         public int TileMapTilesHigh;
         public Rectangle[] TilesetTiles;
+        public List<int> CollidableGids;
 
-        public TileEngine(int mapWidth, int mapHeight, Collection<TmxLayerTile> tiles, TmxTileset tileset) 
+        public TileEngine(int mapWidth, int mapHeight, Collection<TmxLayerTile> tiles, TmxTileset tileset, TmxList<TmxObjectGroup> objectGroups) 
         {
             Map = new byte[mapWidth, mapHeight];
 
@@ -33,6 +36,15 @@ namespace TileEngineDemo
             TileHeight = tileset.TileHeight;
             TileMapTilesWide = mapWidth;
             TileMapTilesHigh = mapHeight;
+
+            CollidableGids = new List<int>();
+            foreach (var tile in tileset.Tiles)
+            {
+                if (tile.Value.ObjectGroups != null)
+                {
+                    CollidableGids.Add(tile.Value.Id);
+                }
+            }
         }
 
         public void Initialize()
@@ -57,6 +69,24 @@ namespace TileEngineDemo
                     TilesetTiles[index] = new Rectangle(x * TileWidth, y * TileHeight, TileWidth, TileHeight);
                     index++;
                 }
+            }
+        }
+
+        private Vector2 PositionToTile(Vector2 position)
+        {
+            return new Vector2((int)(position.X / TileWidth), (int)(position.Y / TileHeight));
+        }
+
+        public bool CheckIfColliding(Rectangle spriteRectangle)
+        {
+            Vector2 TileCoordinates = PositionToTile(new Vector2(spriteRectangle.X, spriteRectangle.Y));
+            int Gid = Map[(int)TileCoordinates.X, (int)TileCoordinates.Y];
+            if (CollidableGids.Contains(Gid - 1))
+            {
+                return true;
+            } else
+            {
+                return false;
             }
         }
 
